@@ -190,7 +190,9 @@ module.exports = function (webpackEnv) {
     target: ['browserslist'],
     // Webpack noise constrained to errors and warnings
     stats: 'errors-warnings',
-    mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
+    // mode: isEnvProduction ? 'production' : isEnvDevelopment && 'development',
+    mode: 'development',
+    // mode: 'production',
     // Stop compilation early in production
     bail: isEnvProduction,
     devtool: isEnvProduction
@@ -229,69 +231,72 @@ module.exports = function (webpackEnv) {
         : isEnvDevelopment &&
           (info => path.resolve(info.absoluteResourcePath).replace(/\\/g, '/')),
     },
-    cache: {
-      type: 'filesystem',
-      version: createEnvironmentHash(env.raw),
-      cacheDirectory: paths.appWebpackCache,
-      store: 'pack',
-      buildDependencies: {
-        defaultWebpack: ['webpack/lib/'],
-        config: [__filename],
-        tsconfig: [paths.appTsConfig, paths.appJsConfig].filter(f =>
-          fs.existsSync(f)
-        ),
-      },
-    },
+    // cache: {
+    //   type: 'filesystem',
+    //   version: createEnvironmentHash(env.raw),
+    //   cacheDirectory: paths.appWebpackCache,
+    //   store: 'pack',
+    //   buildDependencies: {
+    //     defaultWebpack: ['webpack/lib/'],
+    //     config: [__filename],
+    //     tsconfig: [paths.appTsConfig, paths.appJsConfig].filter(f =>
+    //       fs.existsSync(f)
+    //     ),
+    //   },
+    // },
     infrastructureLogging: {
       level: 'none',
     },
     optimization: {
-      minimize: isEnvProduction,
-      minimizer: [
-        // This is only used in production mode
-        new TerserPlugin({
-          terserOptions: {
-            parse: {
-              // We want terser to parse ecma 8 code. However, we don't want it
-              // to apply any minification steps that turns valid ecma 5 code
-              // into invalid ecma 5 code. This is why the 'compress' and 'output'
-              // sections only apply transformations that are ecma 5 safe
-              // https://github.com/facebook/create-react-app/pull/4234
-              ecma: 8,
-            },
-            compress: {
-              ecma: 5,
-              warnings: false,
-              // Disabled because of an issue with Uglify breaking seemingly valid code:
-              // https://github.com/facebook/create-react-app/issues/2376
-              // Pending further investigation:
-              // https://github.com/mishoo/UglifyJS2/issues/2011
-              comparisons: false,
-              // Disabled because of an issue with Terser breaking valid code:
-              // https://github.com/facebook/create-react-app/issues/5250
-              // Pending further investigation:
-              // https://github.com/terser-js/terser/issues/120
-              inline: 2,
-            },
-            mangle: {
-              safari10: true,
-            },
-            // Added for profiling in devtools
-            keep_classnames: isEnvProductionProfile,
-            keep_fnames: isEnvProductionProfile,
-            output: {
-              ecma: 5,
-              comments: false,
-              // Turned on because emoji and regex is not minified properly using default
-              // https://github.com/facebook/create-react-app/issues/2488
-              ascii_only: true,
-            },
-          },
-        }),
-        // This is only used in production mode
-        new CssMinimizerPlugin(),
-      ],
+      usedExports: true,
     },
+    // optimization: {
+    //   minimize: isEnvProduction,
+    //   minimizer: [
+    //     // This is only used in production mode
+    //     new TerserPlugin({
+    //       terserOptions: {
+    //         parse: {
+    //           // We want terser to parse ecma 8 code. However, we don't want it
+    //           // to apply any minification steps that turns valid ecma 5 code
+    //           // into invalid ecma 5 code. This is why the 'compress' and 'output'
+    //           // sections only apply transformations that are ecma 5 safe
+    //           // https://github.com/facebook/create-react-app/pull/4234
+    //           ecma: 8,
+    //         },
+    //         compress: {
+    //           ecma: 5,
+    //           warnings: false,
+    //           // Disabled because of an issue with Uglify breaking seemingly valid code:
+    //           // https://github.com/facebook/create-react-app/issues/2376
+    //           // Pending further investigation:
+    //           // https://github.com/mishoo/UglifyJS2/issues/2011
+    //           comparisons: false,
+    //           // Disabled because of an issue with Terser breaking valid code:
+    //           // https://github.com/facebook/create-react-app/issues/5250
+    //           // Pending further investigation:
+    //           // https://github.com/terser-js/terser/issues/120
+    //           inline: 2,
+    //         },
+    //         mangle: {
+    //           safari10: true,
+    //         },
+    //         // Added for profiling in devtools
+    //         keep_classnames: isEnvProductionProfile,
+    //         keep_fnames: isEnvProductionProfile,
+    //         output: {
+    //           ecma: 5,
+    //           comments: false,
+    //           // Turned on because emoji and regex is not minified properly using default
+    //           // https://github.com/facebook/create-react-app/issues/2488
+    //           ascii_only: true,
+    //         },
+    //       },
+    //     }),
+    //     // This is only used in production mode
+    //     new CssMinimizerPlugin(),
+    //   ],
+    // },
     resolve: {
       // This allows you to set a fallback for where webpack should look for modules.
       // We placed these paths second because we want `node_modules` to "win"

@@ -1,25 +1,15 @@
-import logo from './logo.svg';
 import './App.css';
-
+import {A} from './1.项目内代码shaking';
+import {C,D} from './2.第三方代码shaking';
+import {newE, newF} from './4.验证export{}'
+import Upload from './3.ilc-oss使用示例';
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  A();
+  C();
+  D();
+  newE();
+  newF();
+  return <Upload></Upload> 
 }
 
 export default App;
